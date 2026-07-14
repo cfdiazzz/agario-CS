@@ -14,7 +14,7 @@ int main() {
         
         // Draw text on the screen: (Text, X, Y, FontSize, Color)
         DrawText("If you see this, Raylib is 100% working!", 140, 200, 24, LIGHTGRAY);
-        
+    
         EndDrawing();
     }
 
