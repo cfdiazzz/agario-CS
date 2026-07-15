@@ -1,4 +1,4 @@
-#include <iostream>
+/*#include <iostream>
 #include "raylib.h"
 
 int main() {
@@ -22,3 +22,4 @@ int main() {
     CloseWindow();
     return 0;
 }
+*/
