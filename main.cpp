@@ -1,5 +1,6 @@
 // === Setup ===
 #include "raylib.h"
+#include "raymath.h"   // Clamp() is declared here, not in raylib.h
 #include <cmath>
 #include <vector>
 
