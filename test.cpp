@@ -13,10 +13,6 @@ bool IsTooClose(const Vector2& newPos, const std::vector<Ball>& balls, float min
     for (const auto& ball : balls) {
         float dx = newPos.x - ball.position.x;
         float dy = newPos.y - ball.position.y;
-        float distance = std::sqrt(dx * dx + dy * dy); // pythagorean theorum to calculate distance between two points
-        if (distance < minDistance) { //if the distance the ball will spawn is bigger than the minimum distance, then it will return true, meaning it is too close to another ball
-            return true; // Too close!
-        }
     }
     return false;
 }
@@ -59,7 +55,7 @@ int main() {
 
     float innerRadius = 500.0f; //inner circle 
     float outerRadius = 1300.0f; //where the shape ends
-    float shrinkSpeed = 60.0f; //how fast the donut shrinks/grows
+    float shrinkSpeed = 10.0f; //how fast the donut shrinks/grows
     bool shrinking = true;
 
     std::vector<Ball> balls;
