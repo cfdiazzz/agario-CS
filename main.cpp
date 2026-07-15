@@ -58,13 +58,13 @@ void TryAbsorb(Player &a, Player &b) {
 
 int main() {
     // Create the game window
-    const int screenWidth = 1280;
-    const int screenHeight = 720;
+    const int screenWidth = 600;
+    const int screenHeight = 700;
     InitWindow(screenWidth, screenHeight, "Coop Circles - Raylib (C++)");
     SetTargetFPS(60); // cap the game loop at 60 frames per second
 
     // Player 1: controlled with WASD keys
-    Player p1({ WORLD_SIZE / 2.0f, WORLD_SIZE / 2.0f }, 30, GREEN);
+    Player p1({ WORLD_SIZE / 2.0f, WORLD_SIZE / 2.0f }, 25, GREEN);
 
     // Player 2: controlled with arrow keys, starts slightly off to the side for coop
     Player p2({ WORLD_SIZE / 2.0f + 100, WORLD_SIZE / 2.0f }, 30, BLUE);
