@@ -2,7 +2,7 @@
 #include <vector>
 #include <cmath>
 
-struct Ball {
+struct Ball { //variables for the struct Ball function
     Vector2 position;
     float radius;
     Color color;
@@ -13,8 +13,8 @@ bool IsTooClose(const Vector2& newPos, const std::vector<Ball>& balls, float min
     for (const auto& ball : balls) {
         float dx = newPos.x - ball.position.x;
         float dy = newPos.y - ball.position.y;
-        float distance = std::sqrt(dx * dx + dy * dy);
-        if (distance < minDistance) {
+        float distance = std::sqrt(dx * dx + dy * dy); // pythagorean theorum to calculate distance between two points
+        if (distance < minDistance) { //if the distance the ball will spawn is bigger than the minimum distance, then it will return true, meaning it is too close to another ball
             return true; // Too close!
         }
     }
@@ -23,7 +23,7 @@ bool IsTooClose(const Vector2& newPos, const std::vector<Ball>& balls, float min
 
 // Helper to check if two colors are identical
 bool ColorEquals(Color c1, Color c2) {
-    return (c1.r == c2.r && c1.g == c2.g && c1.b == c2.b);
+    return (c1.r == c2.r && c1.g == c2.g && c1.b == c2.b); //
 }
 
 // Spawn a new valid ball (Strictly excludes RED, GREEN, and BLUE)
@@ -47,7 +47,7 @@ Ball SpawnBall(const std::vector<Ball>& existingBalls) {
         b.position.x = (float)GetRandomValue(30, 770);
         b.position.y = (float)GetRandomValue(30, 570);
         
-        if (!IsTooClose(b.position, existingBalls, 25.0f)) {
+        if (!IsTooClose(b.position, existingBalls, 25.0f)) { //if too close, randomizes position and starts again
             break; // Valid spot found
         }
     }
@@ -57,15 +57,15 @@ Ball SpawnBall(const std::vector<Ball>& existingBalls) {
 int main() {
     InitWindow(800, 600, "Donut and Balls Collision Avoidance");
 
-    float innerRadius = 500.0f;
-    float outerRadius = 1300.0f;
-    float shrinkSpeed = 1.0f; 
+    float innerRadius = 500.0f; //inner circle 
+    float outerRadius = 1300.0f; //where the shape ends
+    float shrinkSpeed = 60.0f; //how fast the donut shrinks/grows
     bool shrinking = true;
 
     std::vector<Ball> balls;
     
-    // Spawn 40 initial balls
-    for (int i = 0; i < 40; i++) {
+    // Spawn 100 initial balls
+    for (int i = 0; i < 100; i++) {
         balls.push_back(SpawnBall(balls));
     }
 
