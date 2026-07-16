@@ -254,66 +254,97 @@ int main() {
             }
 
             // Update balls
-            Image screenImage = LoadImageFromScreen();
-            for (size_t i = 0; i < balls.size(); i++) {
-                bool shouldRespawn = false;
-                const float pelletGrowthAmount = 2.0f; 
+            // 1. CAPTURE SCREEN STATE
+// Take a screenshot of the current frame to use for pixel-color collision detection later
+Image screenImage = LoadImageFromScreen();
 
-                if (p1.alive) {
-                    float dx = balls[i].position.x - p1.pos.x;
-                    float dy = balls[i].position.y - p1.pos.y;
-                    float dist = sqrtf(dx * dx + dy * dy);
-                    if (dist < p1.radius) {
-                        p1.radius += pelletGrowthAmount;
-                        shouldRespawn = true;
-                    }
-                }
-                if (!shouldRespawn && p2.alive) {
-                    float dx = balls[i].position.x - p2.pos.x;
-                    float dy = balls[i].position.y - p2.pos.y;
-                    float dist = sqrtf(dx * dx + dy * dy);
-                    if (dist < p2.radius) {
-                        p2.radius += pelletGrowthAmount;
-                        shouldRespawn = true;
-                    }
-                }
+// 2. ITERATE THROUGH ALL ACTIVE BALLS/PELLETS
+for (size_t i = 0; i < balls.size(); i++) {
+    bool shouldRespawn = false;            // Tracks if the current ball needs to be reset/replaced
+    const float pelletGrowthAmount = 2.0f; // The amount a player grows when consuming a ball
 
+    // 3. PLAYER 1 COLLISION CHECK
+    if (p1.alive) {
+        // Calculate the straight-line distance between Player 1 and the current ball
+        float dx = balls[i].position.x - p1.pos.x;
+        float dy = balls[i].position.y - p1.pos.y;
+        float dist = sqrtf(dx * dx + dy * dy); // Pythagorean theorem (A² + B² = C²)
+
+        // If distance is less than Player 1's radius, Player 1 is touching/overlapping the ball
+        if (dist < p1.radius) {
+            p1.radius += pelletGrowthAmount;   // Increase Player 1's size
+            shouldRespawn = true;              // Mark this ball to be respawned
+        }
+    }
+
+    // 4. PLAYER 2 COLLISION CHECK
+    // Only check Player 2 if Player 1 didn't already consume this specific ball
+    if (!shouldRespawn && p2.alive) {
+        // Calculate the straight-line distance between Player 2 and the current ball
+        float dx = balls[i].position.x - p2.pos.x;
+        float dy = balls[i].position.y - p2.pos.y;
+        float dist = sqrtf(dx * dx + dy * dy); // Pythagorean theorem
+
+        // If distance is less than Player 2's radius, Player 2 is touching/overlapping the ball
+        if (dist < p2.radius) {
+            p2.radius += pelletGrowthAmount;   // Increase Player 2's size
+            shouldRespawn = true;              // Mark this ball to be respawned
+        }
+    }
+                // 1. DEFINE DETECTOR POINTS
+                // Create a cross-pattern of 5 points to check the ball's boundaries
                 Vector2 checkPoints[5] = {
-                    balls[i].position,
-                    { balls[i].position.x, balls[i].position.y - balls[i].radius },
-                    { balls[i].position.x, balls[i].position.y + balls[i].radius },
-                    { balls[i].position.x - balls[i].radius, balls[i].position.y },
-                    { balls[i].position.x + balls[i].radius, balls[i].position.y }
+                    balls[i].position,                                             // Center point
+                    { balls[i].position.x, balls[i].position.y - balls[i].radius }, // Top edge
+                    { balls[i].position.x, balls[i].position.y + balls[i].radius }, // Bottom edge
+                    { balls[i].position.x - balls[i].radius, balls[i].position.y }, // Left edge
+                    { balls[i].position.x + balls[i].radius, balls[i].position.y }  // Right edge
                 };
 
+                // 2. PIXEL COLOR COLLISION DETECTION
+                // Only run this if a player didn't already eat the ball
                 if (!shouldRespawn) {
                     for (int p = 0; p < 5; p++) {
+                        // Cast coordinates to integers for pixel array indexing
                         int posX = (int)checkPoints[p].x;
                         int posY = (int)checkPoints[p].y;
+                        
+                        // Safety Check: Ensure the points are actually inside the screen boundaries
                         if (posX >= 0 && posX < screenWidth && posY >= 0 && posY < screenHeight) {
+                            // Extract the exact color of the pixel from the screenshot
                             Color pixelColor = GetImageColor(screenImage, posX, posY);
+                            
+                            // Trigger collision if the pixel hits a dangerous/obstacle color (RED, GREEN, or BLUE)
                             if (ColorEquals(pixelColor, RED) || ColorEquals(pixelColor, GREEN) || ColorEquals(pixelColor, BLUE)) {
-                                shouldRespawn = true;
-                                break;
+                                shouldRespawn = true; // Mark the ball to be reset
+                                break;                // Stop checking the other points for this ball
                             }
                         }
                     }
                 }
 
+                // 3. RESPOND TO COLLISION (RESPAWN OR DELETE)
                 if (shouldRespawn) {
                     Ball newBall;
+                    // Attempt to find a valid new random position for the ball
                     if (SpawnBall(balls, newBall, innerRadius, outerRadius)) {
-                        balls[i] = newBall;
+                        balls[i] = newBall; // Successfully repositioned; overwrite old ball data
                     } else {
+                        // If no space is left to spawn, remove the ball completely from the vector
                         balls.erase(balls.begin() + i);
-                        i--;
+                        i--; // Decrement index to prevent skipping the next item due to the shift
                     }
                 }
-            }
+            } // END OF FOR LOOP
+            
+            // 4. MEMORY CLEANUP
+            // Free the screenshot memory to prevent severe memory leaks every frame
             UnloadImage(screenImage);
         }
 
+        // 5. GAME OVER STATE HANDLING
         if (gameOver) {
+            // Expand surviving players to maximum size to trigger a win/fill visual effect
             if (p1.alive) p1.radius = maxRadiusNeeded;
             if (p2.alive) p2.radius = maxRadiusNeeded;
         }
