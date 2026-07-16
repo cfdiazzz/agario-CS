@@ -61,7 +61,7 @@ void TryAbsorb(Player &a, Player &b) {
     } else if (b.radius > a.radius * 1.1f && dist < b.radius) {
         float newArea = (PI * b.radius * b.radius) + (PI * a.radius * a.radius);
         b.radius = sqrtf(newArea / PI);
-        a.alive = false;
+        a.alive = false; 
     }
 }
 
