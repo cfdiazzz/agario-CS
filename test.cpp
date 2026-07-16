@@ -1,19 +1,19 @@
-#include "raylib.h"
+/*#include "raylib.h"
 #include <vector>
 #include <cmath>
 
-struct Ball {
+struct Ball { //creates ball, defines its variables
     Vector2 position;
     float radius;
     Color color;
 };
 
 // Check if a ball is too close to other balls
-bool IsTooClose(const Vector2& newPos, const std::vector<Ball>& balls, float minDistance) {
+bool IsTooClose(const Vector2& newPos, const std::vector<Ball>& balls, float minDistance) { //IsTooClose is a function that checks if a new position is too close to existing balls
     for (const auto& ball : balls) {
         float dx = newPos.x - ball.position.x;
         float dy = newPos.y - ball.position.y;
-        float distance = (float)sqrt(dx * dx + dy * dy);
+        float distance = (float)sqrt(dx * dx + dy * dy); // Calculate the distance between the new position and the current ball
         if (distance < minDistance) {
             return true;
         }
@@ -21,7 +21,7 @@ bool IsTooClose(const Vector2& newPos, const std::vector<Ball>& balls, float min
     return false;
 }
 
-// Check if a ball is overlapping with the red ring barrier
+// IsInsideRing is a function to check if a ball is overlapping with the red ring barrier
 bool IsInsideRing(const Vector2& pos, float radius, float innerRadius, float outerRadius) {
     Vector2 ringCenter = { 400.0f, 300.0f }; // Center of your donut ring
     float dx = pos.x - ringCenter.x;
@@ -43,7 +43,7 @@ bool ColorEquals(Color c1, Color c2) {
 bool SpawnBall(const std::vector<Ball>& existingBalls, Ball& newBall, float innerRadius, float outerRadius) {
     newBall.radius = 8.0f;
     
-    int colorChoice = GetRandomValue(0, 5);
+    int colorChoice = GetRandomValue(0, 5); //spawns random colored ball
     switch (colorChoice) {
         case 0: newBall.color = YELLOW; break;
         case 1: newBall.color = ORANGE; break;
@@ -156,3 +156,4 @@ int main() {
     CloseWindow();
     return 0;
 }
+*/
