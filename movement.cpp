@@ -134,7 +134,7 @@ int main() {
     Player p1({ 300.0f, 300.0f }, 25, GREEN);
 
     // Player 2: controlled with arrow keys, starts slightly off to the side for coop
-    Player p2({ 400.0f, 300.0f }, 30, BLUE);
+    Player p2({ 400.0f, 300.0f }, 25, BLUE);
 
     // Ring/donut state
     float innerRadius = 500.0f;
@@ -195,6 +195,29 @@ int main() {
         Image screenImage = LoadImageFromScreen();
         for (size_t i = 0; i < balls.size(); i++) {
             bool shouldRespawn = false;
+
+            // Check if a player is eating this pellet (grows the player, removes the pellet)
+            const float pelletGrowthAmount = 2.0f; // flat radius increase per pellet eaten (linear growth)
+
+            if (p1.alive) {
+                float dx = balls[i].position.x - p1.pos.x;
+                float dy = balls[i].position.y - p1.pos.y;
+                float dist = sqrtf(dx * dx + dy * dy);
+                if (dist < p1.radius) {
+                    p1.radius += pelletGrowthAmount;
+                    shouldRespawn = true;
+                }
+            }
+            if (!shouldRespawn && p2.alive) {
+                float dx = balls[i].position.x - p2.pos.x;
+                float dy = balls[i].position.y - p2.pos.y;
+                float dist = sqrtf(dx * dx + dy * dy);
+                if (dist < p2.radius) {
+                    p2.radius += pelletGrowthAmount;
+                    shouldRespawn = true;
+                }
+            }
+
             Vector2 checkPoints[5] = {
                 balls[i].position,
                 { balls[i].position.x, balls[i].position.y - balls[i].radius },
@@ -203,14 +226,16 @@ int main() {
                 { balls[i].position.x + balls[i].radius, balls[i].position.y }
             };
 
-            for (int p = 0; p < 5; p++) {
-                int posX = (int)checkPoints[p].x;
-                int posY = (int)checkPoints[p].y;
-                if (posX >= 0 && posX < screenWidth && posY >= 0 && posY < screenHeight) {
-                    Color pixelColor = GetImageColor(screenImage, posX, posY);
-                    if (ColorEquals(pixelColor, RED) || ColorEquals(pixelColor, GREEN) || ColorEquals(pixelColor, BLUE)) {
-                        shouldRespawn = true;
-                        break;
+            if (!shouldRespawn) {
+                for (int p = 0; p < 5; p++) {
+                    int posX = (int)checkPoints[p].x;
+                    int posY = (int)checkPoints[p].y;
+                    if (posX >= 0 && posX < screenWidth && posY >= 0 && posY < screenHeight) {
+                        Color pixelColor = GetImageColor(screenImage, posX, posY);
+                        if (ColorEquals(pixelColor, RED) || ColorEquals(pixelColor, GREEN) || ColorEquals(pixelColor, BLUE)) {
+                            shouldRespawn = true;
+                            break;
+                        }
                     }
                 }
             }
