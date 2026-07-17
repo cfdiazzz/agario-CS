@@ -30,7 +30,7 @@ The first run will take a little longer since it's fetching and building raylib 
 
 This approach is the least error-prone because it sidesteps version mismatches between your system's raylib and what the code expects, and it works the same way on Linux, macOS, and Windows as long as CMake and a C++ compiler are available.
 
-### Option 2: Install raylib yourself and compile manually
+### Option 2: Install Raylib Yourself and Compile It Manually
 
 If you'd rather install raylib system-wide (or already have it), you can skip CMake and call your compiler directly. The catch is that raylib itself depends on a few system libraries for graphics, windowing, and input, so those need to be linked in too — which library depends on your OS.
 
