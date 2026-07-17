@@ -1,7 +1,7 @@
 # agario-CS
 We are making Agar.io as a final project for our computer science camp.
 
-## How to play
+## How To Play
 
 Player 1 moves with **WASD**, Player 2 moves with the **arrow keys**. Both players start the same size and are just trying to survive and grow.
 
@@ -13,11 +13,11 @@ The red ring in the middle isn't static. It shrinks down, then expands back out,
 
 The game ends the moment one or both players are eliminated, and the screen fills with either the winner's color (if it was an absorption) or red (if it was the ring), along with a short message explaining what happened.
 
-## Installing and running it
+## Installing and Running It
 
 This is a plain C++ project with one real dependency: **raylib**. There's no package manager built into the project itself, so getting it running comes down to two steps — getting raylib onto your machine, and then compiling `main.cpp` against it.
 
-### Option 1: Let CMake handle raylib for you (easiest)
+### Option 1: Let CMake Handle Raylib For You (easiest)
 
 If you have CMake installed, you don't need to install raylib yourself at all. The included `CMakeLists.txt` is set up to download and build raylib automatically the first time you compile:
 
@@ -55,11 +55,11 @@ g++ main.cpp -o game -lraylib -lopengl32 -lgdi32 -lwinmm
 ```
 If you're using Visual Studio instead of MinGW, raylib also ships Visual Studio project templates — in that case you'd link against `raylib.lib` through the IDE's project settings rather than a command-line flag.
 
-### Why two options exist
+### Why Two Options Exist
 
 The CMake path exists mainly to avoid the most common source of frustration with raylib projects: linking against the wrong version, or forgetting one of the platform-specific system libraries it depends on. If you're just trying to get the game running, start there. The manual route is more useful once you're comfortable with the toolchain and want more control over how raylib is built or where it lives on your system.
 
-## How the code works
+## How The Code Works
 
 **`Player`** is the class behind each circle. It tracks position, size, color, whether it's still alive, and — importantly — *how* it died, since the game distinguishes between being absorbed by the other player and being worn down by the ring. Its one real behavior is `MoveToward()`, which nudges the circle toward wherever the player is steering, without ever overshooting the target, and keeps it from wandering outside the playable world. Speed is tied to size, so the movement math itself is where the "bigger is slower" rule lives.
 
@@ -76,9 +76,3 @@ The CMake path exists mainly to avoid the most common source of frustration with
 **The ring's pulse** — shrinking to a minimum size, then expanding back out again, on a loop — is what keeps the hazard dangerous throughout an entire match rather than just being a one-time closing circle that stops mattering once it's fully closed.
 
 **Game-over handling** ties all of this together: once a player dies, the game looks at *why* they died to decide the message and the color that fills the screen, then freezes all gameplay so the result stays visible until the game is closed.
-
-## Known limitations
-
-The per-frame screenshot used for pixel-based collision detection is the main inefficiency in the code — it's a real GPU-to-CPU transfer happening every single frame, and it can misfire if any unrelated on-screen element happens to be pure red, green, or blue. A version of this built on pure geometry (checking ball-vs-ring and ball-vs-player overlap directly) would be faster and more reliable.
-
-The ring's center position is currently hardcoded rather than being configurable or tied to the screen size, so resizing the window or changing resolution would require updating that value manually.
