@@ -9,6 +9,7 @@ cd .\vcpkg\
 .\vcpkg.exe install raylib:x64-windows
 
 2. Put the final.cpp in vs code then run the following commands:
+
 make
 
 ./game
