@@ -10,9 +10,9 @@ cd .\vcpkg\
 
 2. Put the final.cpp in vs code then run the following commands:
 
-make
+   make
 
-./game
+   ./game
 
-4. HAVE FUN!
+3. HAVE FUN!
 ### How Does The Game Work? (Overview and Function Description)
